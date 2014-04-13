@@ -1,0 +1,28 @@
+dim vodn(3),kvodn (3)
+vodn(1)="promivnoi"; kvodn(1) = 0.75
+vodn(2)="nepromivn"; kvodn(2) = 0.65
+vodn(3)="suhoi    "; kvodn(3) = 0.2
+
+dim st(3), kst(3)
+st(1)="glibistay"; kst(1) = 0.3
+st(2)="orehovat "; kst(2) = 0.25
+st(3)="plitchat "; kst(3) = 0.75
+
+dim pov(3),kpov(3)
+pov(1)="zernist  "; kpov(1) = 0.15
+pov(2)="korkov   "; kpov(2) = 0.7
+pov(3)="treshenev"; kpov(3) = 0.8
+
+
+dim gum(4),kgum(4)
+gum(1)=">10sm "; kgum(1) = 0.95
+gum(2)="6-10sm"; kgum(2) = 0.8
+gum(3)="2-6sm "; kgum(3) = 0.5
+gum(4)="<2sm  "; kgum(4) = 0.15
+
+dim mosh(3),kmosh(3)
+mosh(1)=">10sm "; kmosh(1) = 0.85
+mosh(2)="2-10sm"; kmosh(2) = 0.5
+mosh(3)="<2sm  "; kmosh(3) = 0.1
+
+return
