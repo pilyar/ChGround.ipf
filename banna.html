@@ -1,0 +1,119 @@
+<html>
+<head>
+	
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	
+	
+</head>
+<body>
+<style>
+#set {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #fff;
+    width: 150px;
+    padding:5px;
+}
+</style>
+
+
+
+<div id="mapid"  style="width:100%; height:100%"></div>
+<form id='set' name='set'>  
+<select id='stad' name="Stadium">
+<option value="#">Выберите стадион...</option>
+<option value="Динамо (Москва)">Динамо (Москва)</option>
+<option value="Локомотив (Москва)">Локомотив (Москва)</option>
+<option value="СК им. Э.А.Стрельцова">СК им. Э.А.Стрельцова</option>
+<option value="Родина (Химки)">Родина (Химки)</option>
+<option value="Арена Химки">Арена Химки</option>
+<option value="Сатурн">Сатурн</option>
+<option value="Петровский">Петровский</option>
+<option value="Металлург (Самара)">Металлург (Самара)</option>
+<option value="Старт (Саранск)">Старт (Саранск)</option>
+<option value="Балтика">Балтика</option>
+<option value="Центральный (Казань)">Центральный (Казань)</option>
+<option value="Локомотив (Нижний Новгород)">Локомотив (Нижний Новгород)</option>
+<option value="Олимп-2 (Ростов-на-Дону)">Олимп-2 (Ростов-на-Дону)</option>
+<option value="Казань Арена">Казань Арена</option>
+<option value="Открытие Арена">Открытие Арена</option>
+<option value="Звезда (Пермь)">Звезда (Пермь)</option>
+<option value="Химик (Тверь)">Химик (Тверь)</option>
+<option value="Кубань">Кубань</option>
+<option value="Арсенал">Арсенал</option>
+<option value="Центральный (Екатеринбург)">Центральный (Екатеринбург)</option>
+<input type="button" id="myDiv" value="Перейти" onClick="">  
+</form>
+
+
+<script>
+	
+
+(function(window)
+{
+	stad = document.set.Stadium.value;
+	var map = L.map('mapid');
+
+	var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {minZoom:0,maxZoom:15} );
+	map.addLayer( osm );
+	map.setView([51.504,-0.159], 2 );
+
+	$('#myDiv').click(divFunction);
+	
+
+	
+	function zz() //подгруз файла
+	{
+		$.ajax({
+			type: "GET",
+			url: "https://raw.githubusercontent.com/pilyar/ChGround.ipf/master/stadium.xml",
+			dataType: "xml",
+			success: parseXml
+		});
+	}
+	$(document).ready(zz);
+	var markers = new L.FeatureGroup();
+	var c = new L.FeatureGroup();
+	function parseXml(xml) // парс хмл
+	{
+		$(xml).find("Stadium").each(function(index)
+		{
+			if (stad == $(this).find("Stadium_Name").text()) // запрос. не пашет
+			{		
+				s = "<strong>" + $(this).find("Stadium_Name").text() + "</strong><br />"; // название стадиона
+				$(this).find("Match").each(function(index)
+				{
+					var myDate = new Date($(this).find("Data").text()); 
+					var formatted =  myDate.getDate() + "." + (myDate.getMonth() + 1) + "." +  myDate.getFullYear(); // конверт даты
+					s = s + "<br />" + formatted  + " | " + $(this).find("Host").text() + " - " + $(this).find("Guest").text() + " | " + $(this).find("Sc").text() + "-" + $(this).find("het").text(); // сбор матчей по стадиону
+				});
+				mapPoint=L.marker([$(this).find("Stadium_Lat").text(), $(this).find("Stadium_Lon").text()]) // ставим новый маркер
+				mapPoint.bindPopup(s); // описание маркера
+				markers.addLayer(mapPoint);
+				//alert('kk');
+			}	
+		});
+		
+	}
+	function divFunction()
+	{
+		map.removeLayer(markers);
+		stad = document.set.Stadium.value;
+		markers = new L.FeatureGroup();
+		//markers = c;
+		zz();
+		map.addLayer( markers );
+	};
+	map.addLayer( markers );
+})(window);
+
+</script>
+
+
+
+</body>
+</html>
